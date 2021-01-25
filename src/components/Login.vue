@@ -38,12 +38,12 @@ export default {
       // 表单验证规则对象
       loginFormRules: {
         username: [
-          {required: true, message: '请输入用户名', trigger: 'blur'},
-          {min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur'}
+          {required: true, message: '请输入用户名', trigger: ['blur', 'change']},
+          {min: 3, max: 10, message: '长度在 3 到 10 个字符', trigger: ['blur', 'change']}
         ],
         password: [
-          {required: true, message: '请输入密码', trigger: 'change'},
-          {min: 6, max: 15, message: '长度在 6 到 15 个字符', trigger: 'blur'}
+          {required: true, message: '请输入密码', trigger: ['blur', 'change']},
+          {min: 6, max: 15, message: '长度在 6 到 15 个字符', trigger: ['blur', 'change']}
         ]
       }
     }
@@ -60,7 +60,10 @@ export default {
           // alert("校验不通过")
           return
         }
-        this.$http.post('login/', this.loginForm).then(response => {
+        let params = new URLSearchParams()
+        params.append("username", this.loginForm.username)
+        params.append("password", this.loginForm.password)
+        this.$http.post('login', params).then(response => {
           console.log(response);//请求正确时执行的代码
           let result = response.data
           if (result.status == 200) {

@@ -10,7 +10,12 @@ import './assets/css/global.less'
 import '@fortawesome/fontawesome-free/css/all.css'
 // 请求根路径
 axios.defaults.baseURL = "http://127.0.0.1:8000/shop/"
-// axios.headers = {'Content-Type': 'application/json'}
+// 请求时头部携带token认证信息
+axios.interceptors.request.use(config => {
+  config.headers.Authorization = window.sessionStorage.getItem('token')
+  // console.log(config)
+  return config
+})
 axios.timeout = 1000 * 10
 Vue.prototype.$http = axios
 
