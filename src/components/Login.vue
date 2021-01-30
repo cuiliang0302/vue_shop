@@ -33,7 +33,7 @@ export default {
       // 登录表单数据对象
       loginForm: {
         username: 'admin',
-        password: '123.com'
+        password: '123456'
       },
       // 表单验证规则对象
       loginFormRules: {
@@ -66,9 +66,9 @@ export default {
         this.$http.post('login', params).then(response => {
           console.log(response);//请求正确时执行的代码
           let result = response.data
-          if (result.status == 200) {
-            this.$message.success('欢迎登录！')
-            window.sessionStorage.setItem("token", result.token)
+          if (result.meta.status == 200) {
+            this.$message.success(result.meta.msg)
+            window.sessionStorage.setItem("token", result.data.token)
             this.$router.push("/home")
           } else {
             this.$message.error('用户名或密码错误！')

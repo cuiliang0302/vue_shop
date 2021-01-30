@@ -23,11 +23,11 @@
             <el-submenu v-for="item in menulist" :key="item.id" :index="item.id+''">
               <template slot="title">
                 <i :class="item.icon"></i>
-                <span>{{ item.name }}</span>
+                <span>{{ item.authName }}</span>
               </template>
               <el-menu-item v-for="subItem in item.children" :key="subItem.id" :index="'/'+subItem.path">
                 <i :class="subItem.icon"></i>
-                <span>{{ subItem.name }}</span>
+                <span>{{ subItem.authName }}</span>
               </el-menu-item>
             </el-submenu>
           </el-menu>
@@ -66,9 +66,9 @@ export default {
       this.$http.get('menus').then(response => {
         console.log(response);//请求正确时执行的代码
         let result = response.data
-        if (result.status == 200) {
+        if (result.meta.status == 200) {
           // this.$message.success(result.message)
-          this.menulist = result.menu
+          this.menulist = result.data
           // console.log(this.menulist)
         } else {
           this.$message.error('获取菜单数据异常！')
