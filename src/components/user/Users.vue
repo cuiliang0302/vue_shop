@@ -22,24 +22,22 @@
       </el-row>
       <!--    用户列表区域-->
       <el-table :data="userlist" style="width: 100%" border stripe>
-        <el-table-column type="index" label="ID"></el-table-column>
-        <el-table-column prop="username" label="姓名"></el-table-column>
-        <el-table-column prop="email" label="邮箱"></el-table-column>
-        <el-table-column prop="mobile" label="电话"></el-table-column>
-        <el-table-column prop="role" label="角色"></el-table-column>
-        <el-table-column prop="created_time" label="注册时间"></el-table-column>
-        <el-table-column label="状态">
+        <el-table-column type="index" label="ID" align="center"></el-table-column>
+        <el-table-column prop="username" label="姓名" align="center"></el-table-column>
+        <el-table-column prop="email" label="邮箱" align="center"></el-table-column>
+        <el-table-column prop="mobile" label="电话" align="center"></el-table-column>
+        <el-table-column prop="role_name" label="角色" align="center"></el-table-column>
+        <el-table-column label="状态" align="center">
           <template v-slot="slotProp">
-            <el-switch v-model="slotProp.row.is_active" @change="userActiveChange(slotProp.row)"></el-switch>
+            <el-switch v-model="slotProp.row.mg_state" @change="userActiveChange(slotProp.row)"></el-switch>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="200px">
+        <el-table-column label="操作" width="200px" align="center">
           <template v-slot="slotProp">
-            <br>
             <el-button @click="editDialog(slotProp.row.id)" type="primary" icon="el-icon-edit" size="mini"></el-button>
             <el-button @click="removeUser(slotProp.row.id)" type="danger" icon="el-icon-delete" size="mini"></el-button>
             <el-tooltip class="item" effect="dark" content="分配角色" placement="top" :enterable="false">
-              <el-button type="warning" icon="el-icon-setting" size="mini"></el-button>
+              <el-button @click="setRole(slotProp.row)" type="warning" icon="el-icon-setting" size="mini"></el-button>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -92,6 +90,27 @@
         <span slot="footer" class="dialog-footer">
           <el-button @click="editDialogVisible = false">取 消</el-button>
           <el-button type="primary" @click="editUserInfo">确 定</el-button>
+        </span>
+      </el-dialog>
+      <!--      分配角色对话框-->
+      <el-dialog title="分配角色" :visible.sync="setDialogVisible" width="50%" @close="setDialogClose">
+        <div>
+          <p>当前的用户：{{ userInfo.username }}</p>
+          <p>当前的角色：{{ userInfo.role_name }}</p>
+          <p>分配新角色：
+            <el-select v-model="selectRoleId" placeholder="请选择">
+              <el-option
+                  v-for="item in rolesList"
+                  :key="item.id"
+                  :label="item.roleName"
+                  :value="item.id">
+              </el-option>
+            </el-select>
+          </p>
+        </div>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="setDialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="saveRoleInfo">确 定</el-button>
         </span>
       </el-dialog>
     </el-card>
@@ -151,7 +170,15 @@ export default {
           {required: true, message: '请输入手机号', trigger: ['blur', 'change']},
           {validator: checkMobile, trigger: ['blur', 'change']}
         ]
-      }
+      },
+      // 分配角色对话框默认是否显示
+      setDialogVisible: false,
+      // 需要被分配角色的用户信息
+      userInfo: {},
+      // 所有角色的数据列表
+      rolesList:'',
+      // 选中的新角色id
+      selectRoleId:'',
     }
   },
   created() {
@@ -163,12 +190,12 @@ export default {
       this.$http.get('users', {params: this.queryInfo}).then(response => {
         console.log(response);//请求正确时执行的代码
         let result = response.data
-        if (result.status == 200) {
+        if (result.meta.status == 200) {
           // this.$message.success(result.message)
-          this.userlist = result.users
-          this.total = result.total
+          this.userlist = result.data.users
+          this.total = result.data.total
         } else {
-          this.$message.error('用户名或密码错误！')
+          this.$message.error('获取列表失败！')
         }
       }).catch(response => {
         //发生错误时执行的代码
@@ -187,12 +214,12 @@ export default {
       this.getUserList()
     },
     userActiveChange(userinfo) {
-      // 修改用户信息
-      this.$http.put(`userinfo/${userinfo.id}/state/${userinfo.is_active}`).then(response => {
+      // 修改用户状态
+      this.$http.put(`users/${userinfo.id}/state/${userinfo.mg_state}`).then(response => {
         console.log(response);//请求正确时执行的代码
         let result = response.data
-        if (result.status == 200) {
-          this.$message.success(result.message)
+        if (result.meta.status == 200) {
+          this.$message.success(result.meta.msg)
         } else {
           this.$message.error('修改失败！')
         }
@@ -213,13 +240,14 @@ export default {
         if (valid) {
           let params = new URLSearchParams()
           params.append("username", this.addForm.username)
+          params.append("password", this.addForm.password)
           params.append("email", this.addForm.email)
           params.append("mobile", this.addForm.mobile)
           this.$http.post('users', params).then(response => {
             console.log(response);//请求正确时执行的代码
             let result = response.data
-            if (result.status == 200) {
-              this.$message.success(result.message)
+            if (result.meta.status == 201) {
+              this.$message.success(result.meta.msg)
               this.addDialogVisible = false
               // 隐藏添加用户对话框
               this.getUserList()
@@ -235,16 +263,16 @@ export default {
         }
       })
     },
+    // 用户编辑对话框
     editDialog(id) {
       // console.log(id)
-      // 用户编辑对话框
       this.editDialogVisible = true
       this.$http.get('users/' + id).then(response => {
         console.log(response);//请求正确时执行的代码
         let result = response.data
-        if (result.status == 200) {
-          this.$message.success(result.message)
-          this.editForm = result.user
+        if (result.meta.status == 200) {
+          this.$message.success(result.meta.msg)
+          this.editForm = result.data
         } else {
           this.$message.error('查询信息失败！')
         }
@@ -264,8 +292,8 @@ export default {
           }).then(response => {
             console.log(response);//请求正确时执行的代码
             let result = response.data
-            if (result.status == 200) {
-              this.$message.success(result.message)
+            if (result.meta.status == 200) {
+              this.$message.success(result.meta.msg)
               this.editDialogVisible = false
               this.getUserList()
             } else {
@@ -289,7 +317,7 @@ export default {
         this.$http.delete('users/' + id).then(response => {
           console.log(response);//请求正确时执行的代码
           let result = response.data
-          if (result.status == 200) {
+          if (result.meta.status == 200) {
             this.$message({
               type: 'success',
               message: '删除用户成功!'
@@ -309,6 +337,54 @@ export default {
           message: '已取消删除'
         });
       });
+    },
+    // 分配角色对话框
+    setRole(userInfo) {
+      // 获取所有的角色列表
+      this.$http.get('roles').then(response => {
+        console.log(response);//请求正确时执行的代码
+        let result = response.data
+        if (result.meta.status == 200) {
+          this.$message.success(result.meta.msg)
+          this.rolesList = result.data
+        } else {
+          this.$message.error('获取角色列表失败！')
+        }
+      }).catch(response => {
+        //发生错误时执行的代码
+        this.$message.warning('服务器错误！')
+        console.log(response)
+      });
+      this.userInfo = userInfo
+      this.setDialogVisible = true
+    },
+    //点击按钮分配角色
+    saveRoleInfo(){
+      if(!this.selectRoleId){
+        return this.$message.error("请选择要分配的角色！")
+      }
+      console.log(this.userInfo)
+      console.log(this.rolesList)
+      this.$http.put(`users/${this.userInfo.id}/role`,{rid:this.selectRoleId}).then(response => {
+        console.log(response);//请求正确时执行的代码
+        let result = response.data
+        if (result.meta.status == 200) {
+          this.$message.success(result.meta.msg)
+          this.getUserList()
+          this.setDialogVisible = false
+        } else {
+          this.$message.error('修改失败！')
+        }
+      }).catch(response => {
+        //发生错误时执行的代码
+        this.$message.warning('服务器错误！')
+        console.log(response)
+      });
+    },
+    // 关闭分配权限对话框
+    setDialogClose(){
+      this.selectRoleId = ''
+      this.userInfo = {}
     }
   }
 }

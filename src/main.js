@@ -9,7 +9,8 @@ import './assets/css/global.less'
 // 字体图标文件
 import '@fortawesome/fontawesome-free/css/all.css'
 // 请求根路径
-axios.defaults.baseURL = "http://127.0.0.1:8000/shop/"
+// axios.defaults.baseURL = "http://timemeetyou.com:8889/api/private/v1/"
+axios.defaults.baseURL = "http://rambuild.cn:8888/api/private/v1/"
 // 请求时头部携带token认证信息
 axios.interceptors.request.use(config => {
   config.headers.Authorization = window.sessionStorage.getItem('token')
