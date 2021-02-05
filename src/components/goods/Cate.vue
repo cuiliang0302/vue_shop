@@ -29,15 +29,15 @@
         <el-table-column
             label="是否有效" sortable align="center">
           <template v-slot="slotProp">
-            <i class="el-icon-success" v-if="slotProp.row.cat_deleted == false"></i>
+            <i class="el-icon-success" v-if="slotProp.row.cat_deleted === false"></i>
             <i class="el-icon-error" v-else></i>
           </template>
         </el-table-column>
         <el-table-column
             label="排序" sortable align="center">
           <template v-slot="slotProp">
-            <el-tag size="mini" v-if="slotProp.row.cat_level == 0">一级</el-tag>
-            <el-tag size="mini" type="success" v-else-if="slotProp.row.cat_level == 1">二级</el-tag>
+            <el-tag size="mini" v-if="slotProp.row.cat_level === 0">一级</el-tag>
+            <el-tag size="mini" type="success" v-else-if="slotProp.row.cat_level === 1">二级</el-tag>
             <el-tag size="mini" type="warning" v-else>三级</el-tag>
           </template>
         </el-table-column>
@@ -144,11 +144,11 @@ export default {
   methods: {
     // 获取商品分类数据
     getCateList() {
-      // 获取用户列表
+      // 获取商品列表
       this.$http.get('categories', {params: this.queryInfo}).then(response => {
         console.log(response);//请求正确时执行的代码
         let result = response.data
-        if (result.meta.status == 200) {
+        if (result.meta.status === 200) {
           this.$message.success(result.meta.msg)
           this.catalist = result.data.result
           this.total = result.data.total
@@ -181,7 +181,7 @@ export default {
       this.$http.get('categories', {params: {type: 2}}).then(response => {
         console.log(response);//请求正确时执行的代码
         let result = response.data
-        if (result.meta.status == 200) {
+        if (result.meta.status === 200) {
           this.$message.success(result.meta.msg)
           this.parentCateList = result.data
         } else {
@@ -218,7 +218,7 @@ export default {
           this.$http.post('categories', this.addCateForm).then(response => {
             console.log(response);//请求正确时执行的代码
             let result = response.data
-            if (result.meta.status == 201) {
+            if (result.meta.status === 201) {
               this.$message.success(result.meta.msg)
               this.addDialogVisible = false
               // 隐藏添加分类对话框
@@ -241,7 +241,7 @@ export default {
       this.$http.get('categories/' + id).then(response => {
         console.log(response);//请求正确时执行的代码
         let result = response.data
-        if (result.meta.status == 200) {
+        if (result.meta.status === 200) {
           this.$message.success(result.meta.msg)
           this.editForm = result.data
         } else {
@@ -262,7 +262,7 @@ export default {
           }).then(response => {
             console.log(response);//请求正确时执行的代码
             let result = response.data
-            if (result.meta.status == 200) {
+            if (result.meta.status === 200) {
               this.$message.success(result.meta.msg)
               this.editDialogVisible = false
               this.getCateList()
@@ -287,7 +287,7 @@ export default {
         this.$http.delete('categories/' + id).then(response => {
           console.log(response);//请求正确时执行的代码
           let result = response.data
-          if (result.meta.status == 200) {
+          if (result.meta.status === 200) {
             this.$message({
               type: 'success',
               message: result.meta.msg
@@ -320,5 +320,7 @@ export default {
 .el-icon-error {
   color: red;
 }
-
+.el-cascader {
+  width: 100%;
+}
 </style>

@@ -7,6 +7,7 @@ import Users from "@/components/user/Users";
 import Rights from "@/components/power/Rights";
 import Roles from "@/components/power/Roles";
 import Cate from "@/components/goods/Cate";
+import Params from "@/components/goods/Params";
 // import Home from '../views/Home.vue'
 
 Vue.use(VueRouter)
@@ -14,13 +15,16 @@ Vue.use(VueRouter)
 const routes = [
   {path: '/', redirect: '/login'},
   {path: '/login', component: Login},
-  {path: '/home', component: Home,  redirect: '/welcome' ,children:[
+  {
+    path: '/home', component: Home, redirect: '/welcome', children: [
       {path: '/welcome', component: Welcome},
       {path: '/users', component: Users},
       {path: '/rights', component: Rights},
       {path: '/roles', component: Roles},
-      {path: '/categories', component: Cate}
-    ]},
+      {path: '/categories', component: Cate},
+      {path: '/params', component: Params}
+    ]
+  },
   // {
   //   path: '/',
   //   name: 'Home',
@@ -48,10 +52,10 @@ router.beforeEach((to, from, next) => {
     return next()
   } else {
     const token = window.sessionStorage.getItem('token')
-    if(token){
+    if (token) {
       console.log(token)
       next()
-    }else {
+    } else {
       next('/login')
     }
   }

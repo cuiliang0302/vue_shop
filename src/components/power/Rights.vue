@@ -14,8 +14,8 @@
         <el-table-column label="路径" prop="path" align="center"></el-table-column>
         <el-table-column label="权限等级" align="center">
           <template v-slot="slotProp">
-            <el-tag v-if="slotProp.row.level == '0'">一级</el-tag>
-            <el-tag v-else-if="slotProp.row.level == '1'" type="success">二级</el-tag>
+            <el-tag v-if="slotProp.row.level === '0'">一级</el-tag>
+            <el-tag v-else-if="slotProp.row.level === '1'" type="success">二级</el-tag>
             <el-tag v-else type="warning">三级</el-tag>
           </template>
         </el-table-column>
@@ -42,7 +42,7 @@ export default {
       this.$http.get('rights/list').then(response => {
         console.log(response);//请求正确时执行的代码
         let result = response.data
-        if (result.meta.status == 200) {
+        if (result.meta.status === 200) {
           // this.$message.success(result.message)
           this.rightsList = result.data
           // console.log(this.menulist)

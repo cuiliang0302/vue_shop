@@ -143,7 +143,7 @@ export default {
       this.$http.get('roles').then(response => {
         console.log(response);//请求正确时执行的代码
         let result = response.data
-        if (result.meta.status == 200) {
+        if (result.meta.status === 200) {
           // this.$message.success(result.message)
           this.rolelist = result.data
           // console.log(this.menulist)
@@ -164,7 +164,7 @@ export default {
           this.$http.post('roles', this.addForm).then(response => {
             console.log(response);//请求正确时执行的代码
             let result = response.data
-            if (result.meta.status == 201) {
+            if (result.meta.status === 201) {
               this.$message.success(result.meta.msg)
               // 隐藏添加用户对话框
               this.addDialogVisible = false
@@ -192,7 +192,7 @@ export default {
       this.$http.get('roles/' + id).then(response => {
         console.log(response);//请求正确时执行的代码
         let result = response.data
-        if (result.meta.status == 200) {
+        if (result.meta.status === 200) {
           this.$message.success(result.meta.msg)
           this.editForm = result.data
         } else {
@@ -214,7 +214,7 @@ export default {
           }).then(response => {
             console.log(response);//请求正确时执行的代码
             let result = response.data
-            if (result.meta.status == 200) {
+            if (result.meta.status === 200) {
               this.$message.success(result.meta.msg)
               this.editDialogVisible = false
               this.getRolesList()
@@ -239,7 +239,7 @@ export default {
         this.$http.delete('roles/' + id).then(response => {
           console.log(response);//请求正确时执行的代码
           let result = response.data
-          if (result.meta.status == 200) {
+          if (result.meta.status === 200) {
             this.$message({
               type: 'success',
               message: result.meta.msg
@@ -270,7 +270,7 @@ export default {
         this.$http.delete('roles/' + role.id + '/rights/' + right_id).then(response => {
           console.log(response);//请求正确时执行的代码
           let result = response.data
-          if (result.meta.status == 200) {
+          if (result.meta.status === 200) {
             this.$message({
               type: 'success',
               message: result.meta.msg
@@ -301,7 +301,7 @@ export default {
       this.$http.get('rights/tree').then(response => {
         console.log(response);//请求正确时执行的代码
         let result = response.data
-        if (result.meta.status == 200) {
+        if (result.meta.status === 200) {
           this.$message.success(result.meta.msg)
           this.rightslist = result.data
         } else {
@@ -334,7 +334,7 @@ export default {
       this.$http.post(`roles/${this.roleId}/rights`, {rids:idStr}).then(response => {
         console.log(response);//请求正确时执行的代码
         let result = response.data
-        if (result.meta.status == 200) {
+        if (result.meta.status === 200) {
           this.$message.success(result.meta.msg)
           // 隐藏添加用户对话框
           this.setDialogVisible = false

@@ -190,7 +190,7 @@ export default {
       this.$http.get('users', {params: this.queryInfo}).then(response => {
         console.log(response);//请求正确时执行的代码
         let result = response.data
-        if (result.meta.status == 200) {
+        if (result.meta.status === 200) {
           // this.$message.success(result.message)
           this.userlist = result.data.users
           this.total = result.data.total
@@ -218,7 +218,7 @@ export default {
       this.$http.put(`users/${userinfo.id}/state/${userinfo.mg_state}`).then(response => {
         console.log(response);//请求正确时执行的代码
         let result = response.data
-        if (result.meta.status == 200) {
+        if (result.meta.status === 200) {
           this.$message.success(result.meta.msg)
         } else {
           this.$message.error('修改失败！')
@@ -246,7 +246,7 @@ export default {
           this.$http.post('users', params).then(response => {
             console.log(response);//请求正确时执行的代码
             let result = response.data
-            if (result.meta.status == 201) {
+            if (result.meta.status === 201) {
               this.$message.success(result.meta.msg)
               this.addDialogVisible = false
               // 隐藏添加用户对话框
@@ -270,7 +270,7 @@ export default {
       this.$http.get('users/' + id).then(response => {
         console.log(response);//请求正确时执行的代码
         let result = response.data
-        if (result.meta.status == 200) {
+        if (result.meta.status === 200) {
           this.$message.success(result.meta.msg)
           this.editForm = result.data
         } else {
@@ -292,7 +292,7 @@ export default {
           }).then(response => {
             console.log(response);//请求正确时执行的代码
             let result = response.data
-            if (result.meta.status == 200) {
+            if (result.meta.status === 200) {
               this.$message.success(result.meta.msg)
               this.editDialogVisible = false
               this.getUserList()
@@ -317,7 +317,7 @@ export default {
         this.$http.delete('users/' + id).then(response => {
           console.log(response);//请求正确时执行的代码
           let result = response.data
-          if (result.meta.status == 200) {
+          if (result.meta.status === 200) {
             this.$message({
               type: 'success',
               message: '删除用户成功!'
@@ -344,7 +344,7 @@ export default {
       this.$http.get('roles').then(response => {
         console.log(response);//请求正确时执行的代码
         let result = response.data
-        if (result.meta.status == 200) {
+        if (result.meta.status === 200) {
           this.$message.success(result.meta.msg)
           this.rolesList = result.data
         } else {
@@ -368,7 +368,7 @@ export default {
       this.$http.put(`users/${this.userInfo.id}/role`,{rid:this.selectRoleId}).then(response => {
         console.log(response);//请求正确时执行的代码
         let result = response.data
-        if (result.meta.status == 200) {
+        if (result.meta.status === 200) {
           this.$message.success(result.meta.msg)
           this.getUserList()
           this.setDialogVisible = false
