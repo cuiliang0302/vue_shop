@@ -19,14 +19,14 @@
               background-color="#333744"
               text-color="#fff"
               active-text-color="#409BEF" :unique-opened="true" :collapse="isCollaose" :collapse-transition="false"
-              :router="true" :default-active="$route.path">
-            <el-submenu v-for="item in menulist" :key="item.id" :index="item.id+''">
+              :router="true" :default-active="routeActive">
+            <el-submenu v-for="(item,index) in menulist" :key="item.id" :index="item.id+''">
               <template slot="title">
-                <i :class="item.icon"></i>
-                <span>{{ item.authName }}</span>
+                <i :class="menuicon[index]"></i>
+                <span>{{ item.authName }} </span>
               </template>
               <el-menu-item v-for="subItem in item.children" :key="subItem.id" :index="'/'+subItem.path">
-                <i :class="subItem.icon"></i>
+                <i class="fas fa-th-large"></i>
                 <span>{{ subItem.authName }}</span>
               </el-menu-item>
             </el-submenu>
@@ -47,22 +47,30 @@ export default {
   data() {
     return {
       menulist: [],//侧边栏菜单数据
-      isCollaose:false, //是否折叠菜单
-
+      isCollaose: false, //是否折叠菜单
+      routeActive: '',// 当前高亮子路由
+      // 菜单icon图标
+      menuicon: [
+        "fas fa-user-cog",
+        "fas fa-wrench",
+        "fas fa-shopping-bag",
+        "fas fa-calculator",
+        "fas fa-chart-line",
+      ]
     }
   },
   created() {
     this.getMenuList()
-    // console.log(this)
+    this.routeActive = "/" + (this.$route.path).split("/")[1]
   },
   methods: {
+    // 注销
     logout() {
-      // 注销
       window.sessionStorage.clear()
       this.$router.push('/login')
     },
+    // 获取侧边菜单
     getMenuList() {
-      // 获取侧边菜单
       this.$http.get('menus').then(response => {
         console.log(response);//请求正确时执行的代码
         let result = response.data
@@ -79,8 +87,8 @@ export default {
         console.log(response)
       });
     },
-    toggleCollapse(){
-      // 点击按钮切换菜单的折叠与展开
+    // 点击按钮切换菜单的折叠与展开
+    toggleCollapse() {
       this.isCollaose = !this.isCollaose
     }
   }
@@ -118,6 +126,7 @@ export default {
 .el-aside {
   transition: all 1s;
   background-color: #333744;
+
   .toggle-button > i {
     font-size: 30px;
     color: deepskyblue;
@@ -126,11 +135,13 @@ export default {
     text-align: center;
     cursor: pointer;
   }
+
   i {
     color: #fff;
     padding-right: 5px;
   }
-  .el-menu{
+
+  .el-menu {
     border-right: none;
   }
 }

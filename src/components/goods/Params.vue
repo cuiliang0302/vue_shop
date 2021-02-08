@@ -1,3 +1,4 @@
+<!--分类参数页面-->
 <template>
   <div>
     <!--  面包屑导航-->
@@ -18,7 +19,7 @@
           <span>选择商品分类：</span>
           <el-cascader
               v-model="selectKeys"
-              :options="catalist"
+              :options="catelist"
               clearable
               :props="{ expandTrigger: 'hover',value:'cat_id',label:'cat_name',children:'children'}"
               @change="parentCateChange"></el-cascader>
@@ -130,7 +131,7 @@ export default {
   data() {
     return {
       // 商品分类列表
-      catalist: [],
+      catelist: [],
       // 级联选中的数组
       selectKeys: [],
       // 被激活页签名称
@@ -166,7 +167,7 @@ export default {
         let result = response.data
         if (result.meta.status === 200) {
           this.$message.success(result.meta.msg)
-          this.catalist = result.data
+          this.catelist = result.data
         } else {
           this.$message.error('获取商品分类失败！')
         }
