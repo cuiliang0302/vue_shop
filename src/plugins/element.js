@@ -40,6 +40,8 @@ import {
   CheckboxGroup,
   Upload,
   Image,
+  Timeline,
+  TimelineItem,
 } from "element-ui";
 
 Vue.use(Form)
@@ -79,6 +81,8 @@ Vue.use(Checkbox)
 Vue.use(CheckboxGroup)
 Vue.use(Upload)
 Vue.use(Image)
+Vue.use(Timeline)
+Vue.use(TimelineItem)
 // 全局挂载message弹窗提示
 Vue.prototype.$message = Message
 // 全局挂载messagebox弹窗
