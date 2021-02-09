@@ -267,6 +267,8 @@ export default {
       this.editDialogVisible = true
       this.$http.get('goods/' + id).then(response => {
         console.log(response);//请求正确时执行的代码
+        this.manyTableData=[]
+        this.onlyTableData=[]
         let result = response.data
         if (result.meta.status === 200) {
           this.$message.success(result.meta.msg)

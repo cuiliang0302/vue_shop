@@ -42,6 +42,7 @@ import {
   Image,
   Timeline,
   TimelineItem,
+  Loading,
 } from "element-ui";
 
 Vue.use(Form)
@@ -83,6 +84,7 @@ Vue.use(Upload)
 Vue.use(Image)
 Vue.use(Timeline)
 Vue.use(TimelineItem)
+Vue.use(Loading)
 // 全局挂载message弹窗提示
 Vue.prototype.$message = Message
 // 全局挂载messagebox弹窗

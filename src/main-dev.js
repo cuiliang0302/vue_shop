@@ -11,13 +11,26 @@ import '@fortawesome/fontawesome-free/css/all.css'
 //markdown编辑器
 import mavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
+// 导入Nprogress加载效果插件
+import Nprogress from 'nprogress'
+import 'nprogress/nprogress.css'
 
 // 请求根路径
 axios.defaults.baseURL = "http://127.0.0.1:8888/api/private/v1/"
+// 在request拦截器中展示进度条
+axios.interceptors.request.use(config => {
+  Nprogress.start()
+  return config
+})
 // 请求时头部携带token认证信息
 axios.interceptors.request.use(config => {
   config.headers.Authorization = window.sessionStorage.getItem('token')
   // console.log(config)
+  return config
+})
+// 在response拦截器中隐藏进度条
+axios.interceptors.response.use(config => {
+  Nprogress.done()
   return config
 })
 axios.timeout = 1000 * 10
